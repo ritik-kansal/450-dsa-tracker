@@ -1,7 +1,7 @@
 from django.db.models import fields
 from webapp import models
 from rest_framework import serializers
-from .models import User
+from .models import *
 class UserSerializer(serializers.ModelSerializer):
     # name = serializers.CharField(max_length=30)
     # user_name = serializers.CharField(max_length=30)
@@ -16,3 +16,16 @@ class UserSerializer(serializers.ModelSerializer):
     
     def create(self,validate_data):
         return User.objects.create(**validate_data)
+
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = '__all__'    
+    def create(self,validate_data):
+        return Question.objects.create(**validate_data)
+class TopicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = '__all__'    
+    def create(self,validate_data):
+        return Topic.objects.create(**validate_data)

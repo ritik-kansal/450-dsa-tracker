@@ -1,24 +1,15 @@
-import json
-from django.shortcuts import render
-from rest_framework import serializers
-from .models import User
-from .serializers import UserSerializer
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from django.http import HttpResponse, JsonResponse
-import io
-from django.views.decorators.csrf import csrf_exempt
+from .req import *
 # Create your views here.
 
 # get user
-def user_detail(request,id):
+def getUser(request,id):
     user_data = User.objects.get(id=id)  
     serializer = UserSerializer(user_data)
     return JsonResponse(serializer.data)
     # json_data = JSONRenderer().render(serializer.data)
     # return HttpResponse(json_data, content_type="application/json")
 
-def all_user_detail(request):
+def getAllUsers(request):
     user_data = User.objects.all()  
     serializer = UserSerializer(user_data, many=True)
     return JsonResponse(serializer.data, safe=False)
@@ -29,7 +20,7 @@ def all_user_detail(request):
 
 # create user
 @csrf_exempt
-def user_create(request):
+def createUser(request):
     if request.method == "POST":
         json_data = request.body
         stream = io.BytesIO(json_data)

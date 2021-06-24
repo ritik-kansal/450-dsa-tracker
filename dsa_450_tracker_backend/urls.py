@@ -19,7 +19,16 @@ from webapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user_info/<int:id>', views.user_detail),
-    path('user_info/', views.all_user_detail),
-    path('user_create/', views.user_create),
+
+    path('users/', views.getAllUsers),
+    path('users/<int:id>', views.getUser),
+    path('users/create/', views.createUser),
+
+    path('questions/', views.getAllQuestions),
+    path('questions/<int:id>', views.getQuestion),
+    path('questions/create', views.createQuestion),
+
+    path('topics/', views.getAllTopics),
+    path('topics/<int:id>', views.getTopic),
+    path('topics/create', views.createTopic),
 ]
