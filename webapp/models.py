@@ -2,14 +2,55 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models.base import ModelState
 from django.db.models.deletion import CASCADE
+from django.contrib.auth.base_user import AbstractBaseUser,BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
+from django.utils import timezone
+
+class UserManager(BaseUserManager):
+    def _create_user(self, username, email, password, is_active=True, is_staff=False, is_superuser=False, **extra_fields):
+        now = timezone.now()
+        if not username:
+            raise ValueError("username not valid")
+        email = self.normalize_email(email)
+        user = self.model(username=username,email=email,is_active=is_active,is_staff=is_staff,is_superuser=is_superuser,date_joined=now,**extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self,username,email,password,**extra_fields):
+        # change
+        return self._create_user(username,email,password,**extra_fields)
+
+    def create_superuser(self,username,email,password,**extra_fields):
+        # change
+        return self._create_user( username, email, password, is_active=True, is_staff=True, is_superuser=True, **extra_fields)
 # Create your models here.
-class User(models.Model):
-    name = models.CharField(max_length=30)
-    user_name = models.CharField(max_length=30)
+# class User(models.Model):
+#     name = models.CharField(max_length=30)
+#     username = models.CharField(max_length=30)
+#     email = models.EmailField()
+#     linkedin = models.CharField(max_length=255)
+#     github = models.CharField(max_length=255)
+#     password = models.CharField(max_length=255)
+class User(AbstractBaseUser, PermissionsMixin):
+    username = None
     email = models.EmailField()
-    linkedin = models.CharField(max_length=255)
-    github = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
+    first_name = None
+    last_name = None
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(default=timezone.now)
+    name = models.CharField(max_length=30)
+    username = models.CharField(max_length=30,unique=True)
+    linkedin = models.CharField(max_length=255,blank=True,null=True)
+    github = models.CharField(max_length=255,blank=True,null=True)
+    # password = models.CharField(max_length=255)
+
+    objects = UserManager()
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ['email',]
+
 
 class Topic(models.Model):
     name = models.CharField(max_length=100)
