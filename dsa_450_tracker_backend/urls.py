@@ -23,7 +23,7 @@ urlpatterns = [
 
     path('users/', views.getAllUsers),
     path('users/<int:id>', views.getUser),
-    path('users/create/', views.createUser),
+    # path('users/create/', views.createUser),
 
     path('questions/', views.getAllQuestions),
     path('questions/<int:id>', views.getQuestion),

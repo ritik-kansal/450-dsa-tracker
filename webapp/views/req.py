@@ -11,3 +11,4 @@ import io
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status,generics, permissions
 from rest_framework.views import APIView
+from knox.models import AuthToken
