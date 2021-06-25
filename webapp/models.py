@@ -7,27 +7,27 @@ from django.contrib.auth.models import PermissionsMixin
 from django.utils import timezone
 
 class UserManager(BaseUserManager):
-    def _create_user(self, user_name, email, password, is_active=True, is_staff=False, is_superuser=False, **extra_fields):
+    def _create_user(self, username, email, password, is_active=True, is_staff=False, is_superuser=False, **extra_fields):
         now = timezone.now()
-        if not user_name:
-            raise ValueError("user_name not valid")
+        if not username:
+            raise ValueError("username not valid")
         email = self.normalize_email(email)
-        user = self.model(user_name=user_name,email=email,is_active=is_active,is_staff=is_staff,is_superuser=is_superuser,date_joined=now,**extra_fields)
+        user = self.model(username=username,email=email,is_active=is_active,is_staff=is_staff,is_superuser=is_superuser,date_joined=now,**extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self,user_name,email,password,**extra_fields):
+    def create_user(self,username,email,password,**extra_fields):
         # change
-        return self._create_user(user_name,email,password,**extra_fields)
+        return self._create_user(username,email,password,**extra_fields)
 
-    def create_superuser(self,user_name,email,password,**extra_fields):
+    def create_superuser(self,username,email,password,**extra_fields):
         # change
-        return self._create_user( user_name, email, password, is_active=True, is_staff=True, is_superuser=True, **extra_fields)
+        return self._create_user( username, email, password, is_active=True, is_staff=True, is_superuser=True, **extra_fields)
 # Create your models here.
 # class User(models.Model):
 #     name = models.CharField(max_length=30)
-#     user_name = models.CharField(max_length=30)
+#     username = models.CharField(max_length=30)
 #     email = models.EmailField()
 #     linkedin = models.CharField(max_length=255)
 #     github = models.CharField(max_length=255)
@@ -42,14 +42,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=30)
-    user_name = models.CharField(max_length=30,unique=True)
+    username = models.CharField(max_length=30,unique=True)
     linkedin = models.CharField(max_length=255,blank=True,null=True)
     github = models.CharField(max_length=255,blank=True,null=True)
     # password = models.CharField(max_length=255)
 
     objects = UserManager()
-
-    USERNAME_FIELD = "user_name"
+    USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ['email',]
 
 

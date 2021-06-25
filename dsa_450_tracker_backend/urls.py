@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from webapp import views
+from webapp.views import registerAPI
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +32,7 @@ urlpatterns = [
     path('topics/', views.getAllTopics),
     path('topics/<int:id>', views.getTopic),
     path('topics/create', views.createTopic),
+
+    path('auth/register', registerAPI.as_view(), name='register'),
+
 ]
