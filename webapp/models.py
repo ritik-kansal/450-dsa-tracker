@@ -43,8 +43,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     name = models.CharField(max_length=30)
     user_name = models.CharField(max_length=30,unique=True)
-    linkedin = models.CharField(max_length=255,null=True)
-    github = models.CharField(max_length=255,null=True)
+    linkedin = models.CharField(max_length=255,blank=True,null=True)
+    github = models.CharField(max_length=255,blank=True,null=True)
     # password = models.CharField(max_length=255)
 
     objects = UserManager()
