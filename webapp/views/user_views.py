@@ -18,21 +18,21 @@ def getAllUsers(request):
 # get user
 
 
-# create user
-@csrf_exempt
-def createUser(request):
-    if request.method == "POST":
-        json_data = request.body
-        stream = io.BytesIO(json_data)
-        python_data = JSONParser().parse(stream)
-        serializer = UserSerializer(data=python_data)
-        if serializer.is_valid():
-            serializer.save()
-            res = {'msg':'user created'}
-            return JsonResponse(res)
-            # json_data = JSONRenderer().render(res)
-            # return HttpResponse(json_data,content_type='application/json')
-        return JsonResponse(serializer.errors)
-    res = {'msg':'error occured'}
-    return JsonResponse(res)
+# # create user with auth 
+# @csrf_exempt
+# def createUser(request):
+#     if request.method == "POST":
+#         json_data = request.body
+#         stream = io.BytesIO(json_data)
+#         python_data = JSONParser().parse(stream)
+#         serializer = UserSerializer(data=python_data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             res = {'msg':'user created'}
+#             return JsonResponse(res)
+#             # json_data = JSONRenderer().render(res)
+#             # return HttpResponse(json_data,content_type='application/json')
+#         return JsonResponse(serializer.errors)
+#     res = {'msg':'error occured'}
+#     return JsonResponse(res)
 # create user
