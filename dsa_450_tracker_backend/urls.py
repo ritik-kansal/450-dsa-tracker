@@ -22,21 +22,16 @@ from knox import views as knox_views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('users/', views.getAllUsers),
-    path('users/<int:id>', views.getUser),
-    # path('users/create/', views.createUser),
+    path('api/users', UserApi.as_view()),
+    path('api/users/<int:id>', UserApi.as_view()),
 
-    path('questions/', views.getAllQuestions),
-    path('questions/<int:id>', views.getQuestion),
-    path('questions/create', views.createQuestion),
-
-    path('topics/', views.getAllTopics),
-    path('topics/<int:id>', views.getTopic),
-    path('topics/create', views.createTopic),
-
-    path('auth/register', registerAPI.as_view(), name='register'),
-    # path('auth/register/users', registerAPI.getusers.as_view(), name='get'),
+    path('api/questions', QuestionApi.as_view()),
+    path('api/questions/<int:id>', QuestionApi.as_view()),
     
+    path('api/topics', TopicApi.as_view()),
+    path('api/topics/<int:id>', TopicApi.as_view()),
+    
+    path('api/register', RegisterAPI.as_view(), name='register'),
     path('api/login', LoginAPI.as_view(), name='login'),
     path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),

@@ -1,28 +1,23 @@
 from .req import *
-def getTopic(request,id):
-    topic_data = Topic.objects.get(id=id)
-    serializer = TopicSerializer(topic_data)
-    return JsonResponse(serializer.data)
-def getAllTopics(request):
-    topic_data = Topic.objects.all()
-    serializer = TopicSerializer(topic_data,many = True)
-    return JsonResponse(serializer.data,safe = False)
 
-# create
-@csrf_exempt
-def createTopic(request):
-    if request.method == "POST":
-        json_data = request.body
-        stream = io.BytesIO(json_data)
-        python_data = JSONParser().parse(stream)
-        serializer = TopicSerializer(data=python_data)
+class TopicApi(APIView):
+    serializer_class = TopicSerializer
+    permission_classes = [AllowAny]
+
+    def get(self, request,id=None, format=None):
+        if id == None:
+            topic_data = Topic.objects.all()
+            serializer = TopicSerializer(topic_data,many=True)
+        else:
+            topic_data = Topic.objects.get(id=id)
+            serializer=TopicSerializer(topic_data)
+        return Response(serializer.data)
+    
+    def post(self,request,format=None):
+        serializer = TopicSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            res = {'msg':'question created'}
-            return JsonResponse(res)
-            # json_data = JSONRenderer().render(res)
-            # return HttpResponse(json_data,content_type='application/json')
-        return JsonResponse(serializer.errors)
-    res = {'msg':'error occured'}
-    return JsonResponse(res)
-# create
+            return Response({'msg':'Topic Created'},status=status.HTTP_201_CREATED)
+        return Response({'msg':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
+
+

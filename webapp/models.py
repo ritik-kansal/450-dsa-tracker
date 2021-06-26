@@ -25,13 +25,7 @@ class UserManager(BaseUserManager):
         # change
         return self._create_user( username, email, password, is_active=True, is_staff=True, is_superuser=True, **extra_fields)
 # Create your models here.
-# class User(models.Model):
-#     name = models.CharField(max_length=30)
-#     username = models.CharField(max_length=30)
-#     email = models.EmailField()
-#     linkedin = models.CharField(max_length=255)
-#     github = models.CharField(max_length=255)
-#     password = models.CharField(max_length=255)
+
 class User(AbstractBaseUser, PermissionsMixin):
     username = None
     email = models.EmailField()
@@ -46,6 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     linkedin = models.CharField(max_length=255,blank=True,null=True)
     github = models.CharField(max_length=255,blank=True,null=True)
     # password = models.CharField(max_length=255)
+    # inherited from base class
 
     objects = UserManager()
     USERNAME_FIELD = "username"

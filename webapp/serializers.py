@@ -29,6 +29,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'    
     def create(self,validate_data):
         return Question.objects.create(**validate_data)
+        
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic

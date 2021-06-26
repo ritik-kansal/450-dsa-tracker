@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 load_dotenv()
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -142,18 +142,6 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.SessionAuthentication',
         'knox.auth.TokenAuthentication',
     ],
-    # 'DEFAULT_PERMISSION_CLASSES':[
-
-    # ]
-
 }
-# REST_AUTH_SERIALIZERS = {
-#     'USER_DETAILS_SERIALIZER': 'webapp.serializers.UserDetailsSerializer',
-# }
-# # REST_AUTH_REGISTER_SERIALIZERS = {
-# #     'REGISTER_SERIALIZER': 'webapp.serializers.RegisterSerializer',
-# # }
-
-# REST_FRAMEWORK
 
 AUTH_USER_MODEL = "webapp.User"
