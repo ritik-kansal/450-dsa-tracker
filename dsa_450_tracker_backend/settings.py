@@ -141,7 +141,11 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         'knox.auth.TokenAuthentication',
-    ]
+    ],
+    # 'DEFAULT_PERMISSION_CLASSES':[
+
+    # ]
+
 }
 # REST_AUTH_SERIALIZERS = {
 #     'USER_DETAILS_SERIALIZER': 'webapp.serializers.UserDetailsSerializer',
@@ -149,5 +153,7 @@ REST_FRAMEWORK = {
 # # REST_AUTH_REGISTER_SERIALIZERS = {
 # #     'REGISTER_SERIALIZER': 'webapp.serializers.RegisterSerializer',
 # # }
+
+# REST_FRAMEWORK
 
 AUTH_USER_MODEL = "webapp.User"
