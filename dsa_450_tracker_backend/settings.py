@@ -142,6 +142,9 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.SessionAuthentication',
         'knox.auth.TokenAuthentication',
     ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 AUTH_USER_MODEL = "webapp.User"

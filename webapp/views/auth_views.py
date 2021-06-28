@@ -2,7 +2,6 @@ from .req import *
 
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = AuthSerializer
-    # authentication_classes = [BasicAuthentication]
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

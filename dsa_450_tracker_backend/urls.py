@@ -23,21 +23,18 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 
 router.register('questions',QuestionViewSet,basename='question')
-router.register('topic',TopicViewSet,basename='topic')
-router.register('question-user-mark',QuestionUserMarkViewSet,basename='question_user_mark')
-router.register('pair-programmer',PairProgrammerViewSet,basename='pair_programmer')
+router.register('topics',TopicViewSet,basename='topic')
+router.register('question-user-marks',QuestionUserMarkViewSet,basename='question_user_mark')
+router.register('pair-programmers',PairProgrammerViewSet,basename='pair_programmer')
 router.register('user-asked-for-pair-programming',UserAskedForPairProgrammingViewSet,basename='user_asked_for_pair_programming')
-router.register('mark-update',MarkUpdateViewSet,basename='mark_update')
+router.register('mark-updates',MarkUpdateViewSet,basename='mark_update')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('api/users', UserApi.as_view()),
-    path('api/users/<int:id>', UserApi.as_view()),
-
-    # path('api/questions', QuestionApi.as_view()),
-    # path('api/questions/<int:id>', QuestionApi.as_view()),
-    
+    path('api/users/', UserApi.as_view()),
+    path('api/users/<int:id>/', UserApi.as_view()),
+        
     # path('api/topics', TopicApi.as_view()),
     # path('api/topics/<int:id>', TopicApi.as_view()),
     
@@ -46,5 +43,5 @@ urlpatterns = [
     path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
 
-    path('',include(router.urls))
+    path('api/',include(router.urls))
 ]
