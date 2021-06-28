@@ -36,3 +36,31 @@ class TopicSerializer(serializers.ModelSerializer):
         fields = '__all__'    
     def create(self,validate_data):
         return Topic.objects.create(**validate_data)
+
+class QuestionUserMarkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question_user_mark
+        fields = '__all__'    
+    def create(self,validate_data):
+        return Question_user_mark.objects.create(**validate_data)
+
+class PairProgrammerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pair_programmer
+        fields = '__all__'    
+    def create(self,validate_data):
+        return Pair_programmer.objects.create(**validate_data)
+
+class UserAskedForPairProgrammingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_asked_for_pair_programming
+        fields = '__all__'    
+    def create(self,validate_data):
+        return User_asked_for_pair_programming.objects.create(**validate_data)
+
+class MarkUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mark_update
+        fields = '__all__'    
+    def create(self,validate_data):
+        return Mark_update.objects.create(**validate_data)

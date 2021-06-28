@@ -46,7 +46,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ['email',]
 
-
 class Topic(models.Model):
     name = models.CharField(max_length=100)
 
@@ -124,6 +123,17 @@ class Question_user_mark(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Mark_update(models.Model):
+    marks = [
+        (0,"pending"),
+        (1,"need to revise"),
+        (2,"done"),
+    ]
+    previous_mark = models.IntegerField(choices=marks,default=0,
+            validators=[
+                MaxValueValidator(2),
+                MinValueValidator(0)
+            ]
+        )
     question_user_mark_id = models.ForeignKey(
         'Question_user_mark',
         on_delete=models.CASCADE,
