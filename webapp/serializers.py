@@ -40,7 +40,7 @@ class TopicSerializer(serializers.ModelSerializer):
 class QuestionUserMarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question_user_mark
-        fields = '__all__'    
+        exclude = ('user_id',)
     def create(self,validate_data):
         return Question_user_mark.objects.create(**validate_data)
 

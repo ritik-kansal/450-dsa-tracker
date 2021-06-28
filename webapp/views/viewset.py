@@ -2,17 +2,22 @@
 # from webapp.models import Question_user_mark
 from .req import *
 
-class QuestionViewSet(viewsets.ModelViewSet):
+class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
-class TopicViewSet(viewsets.ModelViewSet):
+class TopicViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
 
 class QuestionUserMarkViewSet(viewsets.ModelViewSet):
     queryset = Question_user_mark.objects.all()
     serializer_class = QuestionUserMarkSerializer
+    # permission_classes = [AllowAny]
+    def perform_create(self, serializer):
+        # print(self.request.user)
+        serializer.save(user_id=self.request.user)
+
 
 class PairProgrammerViewSet(viewsets.ModelViewSet):
     queryset = Pair_programmer.objects.all()
