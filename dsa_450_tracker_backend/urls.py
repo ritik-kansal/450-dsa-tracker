@@ -18,16 +18,16 @@ from django.urls import path,include
 from webapp import views
 from webapp.views import *
 from knox import views as knox_views
-from rest_framework.routers import DefaultRouter
+# from rest_framework.routers import DefaultRouter
 
-router = DefaultRouter()
+# router = DefaultRouter()
 
-router.register('questions',QuestionViewSet,basename='question')
-router.register('topics',TopicViewSet,basename='topic')
-router.register('question-user-marks',QuestionUserMarkViewSet,basename='question_user_mark')
-router.register('pair-programmers',PairProgrammerViewSet,basename='pair_programmer')
-router.register('user-asked-for-pair-programming',UserAskedForPairProgrammingViewSet,basename='user_asked_for_pair_programming')
-router.register('mark-updates',MarkUpdateViewSet,basename='mark_update')
+# router.register('questions',QuestionViewSet,basename='question')
+# router.register('topics',TopicViewSet,basename='topic')
+# router.register('question-user-marks',QuestionUserMarkViewSet,basename='question_user_mark')
+# router.register('pair-programmers',PairProgrammerViewSet,basename='pair_programmer')
+# router.register('user-asked-for-pair-programming',UserAskedForPairProgrammingViewSet,basename='user_asked_for_pair_programming')
+# router.register('mark-updates',MarkUpdateViewSet,basename='mark_update')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,13 +35,16 @@ urlpatterns = [
     path('api/users/', UserApi.as_view()),
     path('api/users/<int:id>/', UserApi.as_view()),
         
-    # path('api/topics', TopicApi.as_view()),
-    # path('api/topics/<int:id>', TopicApi.as_view()),
+    path('api/topics', TopicApi.as_view()),
+    path('api/topics/<int:id>', TopicApi.as_view()),
     
+    path('api/pairing', PairApi.as_view()),
+    path('api/pairing/<int:id>', PairApi.as_view()),
+
     path('api/register', RegisterAPI.as_view(), name='register'),
     path('api/login', LoginAPI.as_view(), name='login'),
     path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
 
-    path('api/',include(router.urls))
+    # path('api/',include(router.urls))
 ]
