@@ -37,9 +37,16 @@ urlpatterns = [
         
     path('api/topics', TopicApi.as_view()),
     path('api/topics/<int:id>', TopicApi.as_view()),
+
+    path('api/questions', QuestionApi.as_view()),
+    path('api/questions/<int:id>', QuestionApi.as_view()),
+
     
     path('api/pairing', PairApi.as_view()),
     path('api/pairing/<int:id>', PairApi.as_view()),
+
+    path('api/question-user-mark', QuestionUserMarkApi.as_view()),
+    path('api/question-user-mark/<int:id>',QuestionUserMarkApi.as_view()),
 
     path('api/register', RegisterAPI.as_view(), name='register'),
     path('api/login', LoginAPI.as_view(), name='login'),
