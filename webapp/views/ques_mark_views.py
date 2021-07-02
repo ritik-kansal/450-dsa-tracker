@@ -4,10 +4,14 @@ from .req import *
 class QuestionUserMarkApi(APIView):
     serializer_class = QuestionUserMarkSerializer
 
-    def get(self,request,id):
-        mark= Question_user_mark.objects.get(id=id)
-        serializer=QuestionUserMarkSerializer(mark)
-        return Response(serializer.data)
+    def get(self,request,uid,qid):
+        user= Question_user_mark.objects.get(user_id=uid)
+        ques= Question_user_mark.objects.get(question_id=qid)
+        if user==ques:
+            serializer=QuestionUserMarkSerializer(user)
+            return Response(serializer.data)
+        else:
+            return Response({'msg':'User or Question does not exists.'},status=status.HTTP_400_BAD_REQUEST)
     
     def post(self,request,format=None):
         serializer = QuestionUserMarkSerializer(data=request.data)
