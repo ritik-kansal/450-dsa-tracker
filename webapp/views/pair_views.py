@@ -28,7 +28,7 @@ class PairApi(APIView):
             return Response({'msg':'Pairing Updated'},status=status.HTTP_201_CREATED)
         return Response({'msg':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self,request,id,format:None):
+    def patch(self,request,id,format=None):
         pk=id
         data=Pair_programmer.objects.get(id=pk)
         serializer=PairProgrammerSerializer(data,data=request.data,partial=True)

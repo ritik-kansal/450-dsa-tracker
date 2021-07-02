@@ -32,7 +32,7 @@ class QuestionApi(APIView):
             return Response({'msg':'Question Updated'},status=status.HTTP_201_CREATED)
         return Response({'msg':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self,request,id,format:None):
+    def patch(self,request,id,format=None):
         pk=id
         data=Question.objects.get(id=pk)
         serializer=QuestionSerializer(data,data=request.data,partial=True)
