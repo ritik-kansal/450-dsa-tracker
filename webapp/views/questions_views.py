@@ -15,7 +15,7 @@ class QuestionApi(APIView):
 
     
     def post(self,request,format=None):
-        serializer = QuestionUserMarkSerializer(data=request.data)
+        serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({'msg':'Marked'},status=status.HTTP_201_CREATED)
