@@ -4,39 +4,53 @@ class AnalyticsAPI(APIView):
     def get(self,request,id=None):
         if id == None: #for current user
             id = self.request.user.id
-        else:
-            # ToDo 
-            # validate
-            pass
-
+            
         # 2 = done
-        data = Question_user_mark.objects.filter(mark=2).select_related('question_id').select_related('question_id__topic_id')
-        question_solved = len(data)
+        # 1 = revise
+        # 0 = pending
+        question_pending = Question_user_mark.objects.filter(mark=0,user_id=id)
+        number_question_pending = len(question_pending)
+
+        question_revise = Question_user_mark.objects.filter(mark=1,user_id=id)
+        number_question_revise = len(question_revise)
+
+        data = Question_user_mark.objects.filter(mark=2,user_id=id).select_related('question_id').select_related('question_id__topic_id')
+        number_question_solved = len(data)
         # percentage of question solved
-        percentage = (question_solved)/450 * 100
+        percentage = (number_question_solved+number_question_revise)/450 * 100
 
         topic_wise_count = dict()
-        level = [0 for i in range(3)]
-        # difficulty wise percentage
-        # and topic count
-        for question_user_mark in data:
+        level = [0 for i in range(3)] # 0(index) easy --- 2 hard
+        # question = set()
+        # difficulty wise percentage and topic count
+        for question_user_mark in data | question_revise:
             # each question_user_mark object has a pre-fetched 'question_id' attribute, and accessing it won't hit the db again. 
             
             topic = question_user_mark.question_id.topic_id.name
             topic_wise_count[topic] = topic_wise_count.get(topic,0)+1
+            # question.add(question_user_mark.question_id)
+            level[question_user_mark.question_id.level]+=1 
 
-            level[question_user_mark.question_id.level]+=1 # 0 easy --- 2 hard
+        easy_per = level[0]/number_question_solved *100
+        medium_per = level[1]/number_question_solved *100
+        hard_per = level[2]/number_question_solved *100
 
-        easy_per = level[0]/question_solved *100
-        medium_per = level[1]/question_solved *100
-        hard_per = level[2]/question_solved *100
+        # serializer = QuestionSerializer(question,many = True)
+        serializer = QuestionUserMarkSerializer(data,many = True)
 
         return Response({
+            "questions_mark" : serializer.data,
             "percentage":percentage,
             "difficulty_based_info":{
                 "easy_per":easy_per,
                 "medium_per":medium_per,
                 "hard_per":hard_per,
             },
-            "topic_wise_count":topic_wise_count
+            "topic_wise_count":topic_wise_count,
+            "user_based":{
+                "total_attempted":number_question_solved+number_question_revise+number_question_pending,
+                "question_solved":number_question_solved,
+                "question_revise":number_question_revise,
+                "question_pending":number_question_pending,
+            }
         })
