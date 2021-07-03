@@ -54,11 +54,14 @@ urlpatterns = [
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
 
     path('api/analytics', AnalyticsAPI.as_view()),
-    path('api/filter/level/<int:id>', LevelFilterAPI.as_view()),
-    path('api/filter/status/<int:id>', StatusFilterAPI.as_view()),
-    path('api/filter/topic/<int:id>', TopicFilterAPI.as_view()),
-    path('api/filter/search', QuestionSearchFilterAPI.as_view()),
-    path('api/filter/search/<str:query>', QuestionSearchFilterAPI.as_view()),
+    
+    # path('api/filter/level/<int:level>', LevelFilterAPI.as_view()),
+    # path('api/filter/status/<int:status>', StatusFilterAPI.as_view()),
+    # path('api/filter/topic/<int:topic_id>', TopicFilterAPI.as_view()),
+    # path('api/filter/search', QuestionSearchFilterAPI.as_view()),
+    # path('api/filter/search/<str:query>', QuestionSearchFilterAPI.as_view()),
+    
+    path('api/filter/general', GeneralFilterAPI.as_view()),
 
 
 
