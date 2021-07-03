@@ -56,7 +56,7 @@ class GeneralFilterAPI(APIView):
         ]
 
     def post(self,request,format=None):
-        cursor = connection.cursor()
+        
         table = "SELECT *,q.id as id,qm.id as qm_id FROM webapp_question as q JOIN webapp_question_user_mark as qm ON qm.question_id=q.id"
         query_str = " WHERE"
         for query in request.data:
@@ -70,7 +70,10 @@ class GeneralFilterAPI(APIView):
                     if query_str != " WHERE":
                         query_str+=f" AND"
                     query_str+=f" {search} LIKE '%{request.data[query][search]}%'"   
-
+        if query_str == " WHERE":
+            query_str=""
+            
+        cursor = connection.cursor()
         cursor.execute(table+query_str)
         # error handling
         return Response(self.__dictfetchall(cursor))
