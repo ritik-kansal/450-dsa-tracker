@@ -58,6 +58,8 @@ urlpatterns = [
     path('api/filter/status/<int:id>', StatusFilterAPI.as_view()),
     path('api/filter/topic/<int:id>', TopicFilterAPI.as_view()),
     path('api/filter/search', QuestionSearchFilterAPI.as_view()),
+    path('api/filter/search/<str:query>', QuestionSearchFilterAPI.as_view()),
+
 
 
 

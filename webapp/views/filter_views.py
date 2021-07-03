@@ -22,14 +22,12 @@ class TopicFilterAPI(APIView):
 
 class QuestionSearchFilterAPI(APIView):
     permission_classes = [AllowAny]
-    def get(self,request,Format=None):
-        data = Question.objects.all()
-        serializer=QuestionSerializer(data,many=True)
-        return Response(serializer.data)
 
-    def post(self,request,Format=None):
-        str=json.dumps(request.data)
-        dict=json.loads(str)
-        data = Question.objects.filter(link__contains=dict['name'])
+    def get(self,request,query=None,Format=None):
+        if query == None:
+            data = Question.objects.all()
+            serializer = QuestionSerializer(data,many=True)
+            return Response(serializer.data)    
+        data = Question.objects.filter(name__contains=query)
         serializer=QuestionSerializer(data)
         return Response(serializer.data)
