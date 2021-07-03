@@ -47,13 +47,14 @@ from django.db import connection
 
 class GeneralFilterAPI(APIView):
     permission_classes = [AllowAny]
-    def dictfetchall(self,cursor):
+    def __dictfetchall(self,cursor):
     # "Return all rows from a cursor as a dict"
         columns = [col[0] for col in cursor.description]
         return [
             dict(zip(columns, row))
             for row in cursor.fetchall()
         ]
+
     def post(self,request,format=None):
         cursor = connection.cursor()
         table = "SELECT *,q.id as id,qm.id as qm_id FROM webapp_question as q JOIN webapp_question_user_mark as qm ON qm.question_id=q.id"
@@ -61,15 +62,15 @@ class GeneralFilterAPI(APIView):
         for query in request.data:
             if query!="search":
                 if query_str != " WHERE":
-                    query_str+=f" AND {query} = {request.data[query]}"
-                else:
-                    query_str += f" {query} = {request.data[query]}"
+                    query_str+=f" AND"
+                query_str += f" {query} = {request.data[query]}"
+
             else:
                 for search in request.data[query]:
                     if query_str != " WHERE":
-                        query_str+=f" AND {search} LIKE '%{request.data[query][search]}%'"   
-                    else: 
-                        query_str+=f" {search} LIKE '%{request.data[query][search]}%'"   
+                        query_str+=f" AND"
+                    query_str+=f" {search} LIKE '%{request.data[query][search]}%'"   
 
         cursor.execute(table+query_str)
-        return Response(self.dictfetchall(cursor))
+        # error handling
+        return Response(self.__dictfetchall(cursor))
