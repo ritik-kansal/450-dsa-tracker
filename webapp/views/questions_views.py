@@ -12,13 +12,12 @@ class QuestionApi(APIView):
             serializer = QuestionSerializer(question_data)
             return Response(serializer.data)
         
-
     
     def post(self,request,format=None):
         serializer = QuestionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'msg':'Marked'},status=status.HTTP_201_CREATED)
+            return Response({'msg':'Question Posted'},status=status.HTTP_201_CREATED)
         return Response({'msg':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
 

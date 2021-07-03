@@ -6,3 +6,4 @@ from .pair_views import *
 from .ques_mark_views import *
 from .questions_views import *
 from .analytics_views import *
+from .filter_views import *
