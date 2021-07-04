@@ -57,28 +57,29 @@ class GeneralFilterAPI(APIView):
 
     def post(self,request,format=None):
         
-        table = "SELECT *,q.id as id,qm.id as qm_id FROM webapp_question as q LEFT JOIN webapp_question_user_mark as qm ON qm.question_id=q.id"
-        query_str = " WHERE"
+        table = "SELECT *,q.id as id,qm.id as qm_id FROM webapp_question as q LEFT JOIN webapp_question_user_mark as qm ON q.id=qm.question_id"
+        query_str = f" WHERE (user_id = {self.request.user.id} OR user_id IS NULL)"
         for query in request.data:
             if query!="search":
-                if query_str != " WHERE":
-                    query_str+=f" AND"
-                query_str += f" {query} = {request.data[query]}"
+                query_str += f" AND {query} = {request.data[query]}"
 
             else:
                 for search in request.data[query]:
-                    if query_str != " WHERE":
-                        query_str+=f" AND"
-                    query_str+=f" {search} LIKE '%{request.data[query][search]}%'"   
-        if query_str != " WHERE":
-            query_str+=" AND"
-        query_str+=f" (user_id = {self.request.user.id} OR user_id IS NULL)"
+                    query_str+=f" AND {search} LIKE '%{request.data[query][search]}%'"   
+
         cursor = connection.cursor()
-        cursor.execute(table+query_str)
-        print(table+query_str)
+        try:
+            cursor.execute(...)
+            cursor.execute(table+query_str)
+            result = self.__dictfetchall(cursor)
+            return Response({
+                "length":len(result),
+                "questions":result
+            })
+        finally:
+            cursor.close()
+            return Response({
+                "msg":"error occured"
+            })
+
         # error handling
-        result = self.__dictfetchall(cursor)
-        return Response({
-            "length":len(result),
-            "questions":result
-        })
