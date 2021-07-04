@@ -69,14 +69,15 @@ class GeneralFilterAPI(APIView):
 
         cursor = connection.cursor()
         try:
-            cursor.execute(...)
+        
             cursor.execute(table+query_str)
             result = self.__dictfetchall(cursor)
+            cursor.close()
             return Response({
                 "length":len(result),
                 "questions":result
             })
-        finally:
+        except:
             cursor.close()
             return Response({
                 "msg":"error occured"
