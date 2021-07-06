@@ -47,6 +47,7 @@ urlpatterns = [
 
     path('api/question-user-mark', QuestionUserMarkApi.as_view()),
     path('api/question-user-mark/<int:id>',QuestionUserMarkApi.as_view()),
+    
 
     path('api/register', RegisterAPI.as_view(), name='register'),
     path('api/login', LoginAPI.as_view(), name='login'),
@@ -64,6 +65,7 @@ urlpatterns = [
     
     path('api/filter/general', GeneralFilterAPI.as_view()),
 
+    path('api/test_question_user_mark_public', QuestionUserMarkAndLogApi.as_view()),
 
 
 
