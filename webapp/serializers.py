@@ -23,7 +23,7 @@ class AuthSerializer(serializers.ModelSerializer):
         cant create superuser or staff via api
         """
         if "is_staff" in data or "is_superuser" in data:
-            raise serializers.ValidationError({"roles":"cant create superuser or staff via api"})
+            raise serializers.ValidationError({"roles":"can not create superuser or staff via api"})
         return data
     def create(self,validate_data):
         return User.objects.create_user(**validate_data)
