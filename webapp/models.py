@@ -88,6 +88,9 @@ class Pair_programmer(models.Model):
         related_name='%(class)s_user_2'
     )
 
+    class Meta:
+        unique_together = ('user_1','user_2')
+
 class User_asked_for_pair_programming(models.Model):
     user_id = models.ForeignKey(
         'User',
@@ -121,6 +124,9 @@ class Question_user_mark(models.Model):
             ]
         )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('question_id','user_id')
 
 class Mark_update(models.Model):
     marks = [

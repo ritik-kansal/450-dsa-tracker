@@ -1,4 +1,3 @@
-from re import search
 from .req import *
 from django.db import connection
 # filter question level based
@@ -46,7 +45,7 @@ from django.db import connection
 
 
 class GeneralFilterAPI(APIView):
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
     def __dictfetchall(self,cursor):
     # "Return all rows from a cursor as a dict"
         columns = [col[0] for col in cursor.description]

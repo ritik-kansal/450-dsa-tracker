@@ -66,7 +66,9 @@ urlpatterns = [
     path('api/filter/general', GeneralFilterAPI.as_view()),
 
     path('api/test_question_user_mark_public', QuestionUserMarkAndLogApi.as_view()),
-
+    
+    path('api/get_question/<int:page_number>', QuestionDataApi.as_view()),
+    
 
 
 

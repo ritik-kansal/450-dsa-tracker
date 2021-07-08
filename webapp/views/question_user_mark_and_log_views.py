@@ -5,7 +5,7 @@ class Log(APIView):
     serializer_class = MarkUpdateSerializer
 
     def maintainLog(self,data,format=None):
-        print(data.id,data.mark)
+        # print(data.id,data.mark)
         data = ({"question_user_mark_id":data.id,"previous_mark":data.mark})
         serializer = MarkUpdateSerializer(data=data)
         if serializer.is_valid():
@@ -28,12 +28,13 @@ class QuestionUserMarkAndLogApi(APIView):
         data_fetched = data.first()
         serializer=QuestionUserMarkSerializer(data.first(),data=request.data,partial=True)
         if serializer.is_valid():
-            serializer.save()
-
-            # maintain record of previous marks
             obj = Log()
             if obj.maintainLog(data_fetched):
+                serializer.save()
                 return Response({'msg':'Mark Patched'},status=status.HTTP_201_CREATED)
+                
+
+            # maintain record of previous marks
         return Response({'msg':serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
     # if calling first time then it will create new mark else it will call patch internally and updates the previous record
