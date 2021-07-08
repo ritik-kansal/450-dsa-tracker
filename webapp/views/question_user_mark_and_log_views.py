@@ -41,7 +41,7 @@ class QuestionUserMarkAndLogApi(APIView):
     def post(self,request,format=None):
         if 'question_id' not in request.data:
             return Response({
-                "msg":"question_id is required field"
+                "question_id":["question_id is required field"]
             })
 
         data=Question_user_mark.objects.filter(question_id=request.data['question_id'],user_id=self.request.user.id)

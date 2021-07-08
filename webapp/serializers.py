@@ -18,7 +18,13 @@ class AuthSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
         extra_kwargs = {'password': {'write_only': True}}
-
+    def validate(self, data):
+        """
+        cant create superuser or staff via api
+        """
+        if "is_staff" in data or "is_superuser" in data:
+            raise serializers.ValidationError({"roles":"cant create superuser or staff via api"})
+        return data
     def create(self,validate_data):
         return User.objects.create_user(**validate_data)
 
