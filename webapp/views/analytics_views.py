@@ -18,9 +18,12 @@ class AnalyticsAPI(APIView):
         question_done = Question_user_mark.objects.filter(mark=2,user_id=id)
         number_question_done = len(question_done)
 
+        questions = Question.objects.all()
+        number_of_questions = len(questions)
+
         number_question_solved = number_question_done+number_question_revise
         # percentage of question solved
-        percentage = (number_question_solved)/450 * 100
+        percentage = (number_question_solved)/number_of_questions * 100
 
         topic_wise_count = dict()
         level = [0 for i in range(3)] # 0(index) easy --- 2 hard
@@ -51,8 +54,8 @@ class AnalyticsAPI(APIView):
             },
             "topic_wise_count":topic_wise_count,
             "user_based":{
-                "total_attempted":number_question_solved+number_question_revise+number_question_pending,
-                "question_solved":number_question_solved,
+                "total_attempted":number_question_done+number_question_revise+number_question_pending,
+                "question_solved":number_question_done,
                 "question_revise":number_question_revise,
                 "question_pending":number_question_pending,
             }

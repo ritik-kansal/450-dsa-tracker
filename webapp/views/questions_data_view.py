@@ -11,27 +11,37 @@ class QuestionDataApi(APIView):
         ]
 
     def get(self,request,page_number=1):
+        friends = Pair_programmer.objects.filter(user_1=request.user.id).select_related("user_2")
+
+        sql_friends = ""
+        for friend in friends[:len(friends)-1]:
+            sql_friends += str(friend.user_2.id)+","
+        sql_friends += str(friends[len(friends)-1].user_2.id)
+
         # each page will hold 10 questions
         start_id = 10*(page_number-1) + 1 # lets say page_number == 2 then start_id = 11
-        table = f"SELECT q.*,t.name,qm.mark FROM webapp_question as q JOIN webapp_topic as t ON q.topic_id = t.id LEFT JOIN webapp_question_user_mark as qm ON qm.question_id = q.id WHERE q.id >= %s AND q.id <= %s AND (qm.user_id = %s OR qm.user_id IS NULL)"
+        #can use string formating as sql_friends variable cant be altered
+        table = (f"SELECT q.*,t.name,qm.mark,(SELECT COUNT(*) FROM webapp_question_user_mark as qm WHERE qm.question_id = q.id AND qm.mark IN (0,1,2) AND user_id IN ({sql_friends})) AS friends" 
+                 " FROM webapp_question as q"
+                 " JOIN webapp_topic as t ON q.topic_id = t.id" 
+                 " LEFT JOIN webapp_question_user_mark as qm ON q.id = qm.question_id AND qm.user_id = %s" 
+                 " WHERE q.id >= %s AND q.id <= %s")
 
-        # return Response(start_id+9)
         cursor = connection.cursor()
-        cursor.execute(table,[start_id,start_id+9,request.user.id])
-        result = self.__dictfetchall(cursor)
-        cursor.close()
+        try:
+            cursor.execute(table,[request.user.id,start_id,start_id+9])
+            result = self.__dictfetchall(cursor)
+            cursor.close()
 
-
+            
+            return Response({
+                "length":len(result),
+                "questions":result,
+            })
         
-        return Response({
-            "length":len(result),
-            "questions":result
-        })
-        # try:
-        
-        # except:
-        #     cursor.close()
-        #     return Response({
-        #         "msg":"error occured"
-        #     })
+        except:
+            cursor.close()
+            return Response({
+                "msg":"error occured"
+            })
 
