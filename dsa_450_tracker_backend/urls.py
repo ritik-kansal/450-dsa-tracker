@@ -69,7 +69,9 @@ urlpatterns = [
     
     path('api/get_question/<int:page_number>', QuestionDataApi.as_view()),
     
-
+    # pages
+    path('api/pages/index', IndexPageAPI.as_view()),
+    
 
 
     # path('api/',include(router.urls))

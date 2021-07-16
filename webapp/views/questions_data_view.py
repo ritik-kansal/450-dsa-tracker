@@ -10,7 +10,7 @@ class QuestionDataApi(APIView):
             for row in cursor.fetchall()
         ]
 
-    def get(self,request,page_number=1):
+    def helper(self,request,page_number=1):
         friends = Pair_programmer.objects.filter(user_1=request.user.id).select_related("user_2")
 
         sql_friends = ""
@@ -34,14 +34,17 @@ class QuestionDataApi(APIView):
             cursor.close()
 
             
-            return Response({
+            return {
                 "length":len(result),
                 "questions":result,
-            })
+            }
         
         except:
             cursor.close()
-            return Response({
+            return {
                 "msg":"error occured"
-            })
+            }
+
+    def get(self,request,page_number=1):
+        return Response(self.helper(request,page_number))
 

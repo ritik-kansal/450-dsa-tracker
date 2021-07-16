@@ -55,31 +55,46 @@ class GeneralFilterAPI(APIView):
         ]
 
     def post(self,request,format=None):
-        
-        table = "SELECT *,q.id as id,qm.id as qm_id FROM webapp_question as q LEFT JOIN webapp_question_user_mark as qm ON q.id=qm.question_id"
+        friends = Pair_programmer.objects.filter(user_1=request.user.id).select_related("user_2")
+
+        sql_friends = ""
+        for friend in friends[:len(friends)-1]:
+            sql_friends += str(friend.user_2.id)+","
+        sql_friends += str(friends[len(friends)-1].user_2.id)
+
+        arguments = []
+        table = (f"SELECT q.*,t.name,qm.mark,(SELECT COUNT(*) FROM webapp_question_user_mark as qm WHERE qm.question_id = q.id AND qm.mark IN (0,1,2) AND user_id IN ({sql_friends})) AS friends" 
+                 " FROM webapp_question as q" 
+                 " JOIN webapp_topic as t ON q.topic_id = t.id"
+                 " LEFT JOIN webapp_question_user_mark as qm ON q.id=qm.question_id")
         query_str = f" WHERE (user_id = {self.request.user.id} OR user_id IS NULL)"
         for query in request.data:
             if query!="search":
-                query_str += f" AND {query} = {request.data[query]}"
+                data = (request.data[query])
+                arguments+=data
+                query_str += f" AND {query} IN ({','.join(['%s'] * len(data))})"
 
             else:
                 for search in request.data[query]:
-                    query_str+=f" AND {search} LIKE '%{request.data[query][search]}%'"   
+                    arguments.append(request.data[query][search])
+                    query_str+=f" AND {search} LIKE '%%s%'"   
 
         cursor = connection.cursor()
-        try:
-        
-            cursor.execute(table+query_str)
-            result = self.__dictfetchall(cursor)
-            cursor.close()
-            return Response({
-                "length":len(result),
-                "questions":result
-            })
-        except:
-            cursor.close()
-            return Response({
-                "msg":"error occured"
-            })
+        # try:
+        # exit()
+        cursor.execute(table+query_str,arguments)
+        print(connection.queries)
+        # exit()
+        result = self.__dictfetchall(cursor)
+        cursor.close()
+        return Response({
+            "length":len(result),
+            "questions":result
+        })
+        # except:
+        #     cursor.close()
+        #     return Response({
+        #         "msg":"error occured"
+        #     })
 
         # error handling

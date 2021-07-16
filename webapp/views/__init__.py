@@ -9,3 +9,6 @@ from .analytics_views import *
 from .filter_views import *
 from .question_user_mark_and_log_views import *
 from .questions_data_view import *
+
+# 
+from .index_page_view import *

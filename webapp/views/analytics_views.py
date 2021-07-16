@@ -8,14 +8,14 @@ class AnalyticsAPI(APIView):
         # 2 = done
         # 1 = revise
         # 0 = pending
-        question_pending = Question_user_mark.objects.filter(mark=0,user_id=id)
+        question_pending = Question_user_mark.objects.filter(mark=0,user_id=id).select_related('question_id').select_related('question_id__topic_id')
         number_question_pending = len(question_pending)
 
-        question_revise = Question_user_mark.objects.filter(mark=1,user_id=id)
+        question_revise = Question_user_mark.objects.filter(mark=1,user_id=id).select_related('question_id').select_related('question_id__topic_id')
         number_question_revise = len(question_revise)
 
         # data = Question_user_mark.objects.filter(mark=2,user_id=id).select_related('question_id').select_related('question_id__topic_id')
-        question_done = Question_user_mark.objects.filter(mark=2,user_id=id)
+        question_done = Question_user_mark.objects.filter(mark=2,user_id=id).select_related('question_id').select_related('question_id__topic_id')
         number_question_done = len(question_done)
 
         questions = Question.objects.all()
