@@ -63,7 +63,7 @@ class GeneralFilterAPI(APIView):
         sql_friends += str(friends[len(friends)-1].user_2.id)
 
         arguments = []
-        table = (f"SELECT q.*,t.name,qm.mark,(SELECT COUNT(*) FROM webapp_question_user_mark as qm WHERE qm.question_id = q.id AND qm.mark IN (0,1,2) AND user_id IN ({sql_friends})) AS friends" 
+        table = (f"SELECT q.*,t.name as topic_name,qm.mark,(SELECT COUNT(*) FROM webapp_question_user_mark as qm WHERE qm.question_id = q.id AND qm.mark IN (0,1,2) AND user_id IN ({sql_friends})) AS friends" 
                  " FROM webapp_question as q" 
                  " JOIN webapp_topic as t ON q.topic_id = t.id"
                  " LEFT JOIN webapp_question_user_mark as qm ON q.id=qm.question_id")

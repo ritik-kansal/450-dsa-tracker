@@ -1,6 +1,7 @@
 from webapp.views.questions_data_view import QuestionDataApi
 from .req import *
 from .questions_data_view import QuestionDataApi
+from .questions_solved_view import QuestionSolvedAPI
 
 class IndexPageAPI(APIView):
     def get(self,request,id=None):
@@ -10,21 +11,12 @@ class IndexPageAPI(APIView):
         topics_data = serializer.data
 
         # questions solved
-        if id == None: #for current user
-            id = self.request.user.id
-
-        level = [0 for i in range(4)] #easy, medium, hard, notsolved
-        questions_marked = Question_user_mark.objects.filter(mark__range=(1,3),user_id=id).select_related('question_id')
-        for question_mark in questions_marked:
-            level[question_mark.question_id.level]+=1 
-        level[3] = 450-len(questions_marked)
+        questions_solved = QuestionSolvedAPI().helper(request,1)
+        
         questions_data = QuestionDataApi().helper(request,1)
 
         return Response({
             "topics":topics_data,
             "questions_data":questions_data,
-            "questions_solved": {
-                "count":len(questions_marked),
-                "difficulty_levels":level
-            }
+            "questions_solved": questions_solved
         })

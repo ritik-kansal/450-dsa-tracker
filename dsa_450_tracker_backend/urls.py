@@ -56,6 +56,7 @@ urlpatterns = [
 
     path('api/analytics', AnalyticsAPI.as_view()),
     path('api/analytics/<int:id>', AnalyticsAPI.as_view()),
+    path('api/questions_solved', QuestionSolvedAPI.as_view()),
     
     # path('api/filter/level/<int:level>', LevelFilterAPI.as_view()),
     # path('api/filter/status/<int:status>', StatusFilterAPI.as_view()),
