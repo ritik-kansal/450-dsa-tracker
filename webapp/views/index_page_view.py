@@ -1,7 +1,6 @@
-from webapp.views.questions_data_view import QuestionDataApi
 from .req import *
-from .questions_data_view import QuestionDataApi
 from .questions_solved_view import QuestionSolvedAPI
+from .filter_views import GeneralFilterAPI
 
 class IndexPageAPI(APIView):
     def get(self,request,id=None):
@@ -13,7 +12,7 @@ class IndexPageAPI(APIView):
         # questions solved
         questions_solved = QuestionSolvedAPI().helper(request,1)
         
-        questions_data = QuestionDataApi().helper(request,1)
+        questions_data = GeneralFilterAPI().helper(request,1)
 
         return Response({
             "topics":topics_data,

@@ -19,23 +19,29 @@ class QuestionDataApi(APIView):
         sql_friends += str(friends[len(friends)-1].user_2.id)
 
         # each page will hold 10 questions
-        start_id = 10*(page_number-1) + 1 # lets say page_number == 2 then start_id = 11
+        
         #can use string formating as sql_friends variable cant be altered
-        table = (f"SELECT q.*,t.name as topic_name,qm.mark,(SELECT COUNT(*) FROM webapp_question_user_mark as qm WHERE qm.question_id = q.id AND qm.mark IN (0,1,2) AND user_id IN ({sql_friends})) AS friends" 
-                 " FROM webapp_question as q"
+        select = (f"SELECT q.*,t.name as topic_name,qm.mark,(SELECT COUNT(*) FROM webapp_question_user_mark as qm WHERE qm.question_id = q.id AND qm.mark IN (0,1,2) AND user_id IN ({sql_friends})) AS friends" )
+        select_count = "SELECT COUNT(*)"
+        
+        table = (" FROM webapp_question as q"
                  " JOIN webapp_topic as t ON q.topic_id = t.id" 
-                 " LEFT JOIN webapp_question_user_mark as qm ON q.id = qm.question_id AND qm.user_id = %s" 
-                 " WHERE q.id >= %s AND q.id <= %s")
-
+                 " LEFT JOIN webapp_question_user_mark as qm ON q.id = qm.question_id AND qm.user_id = %s" )
+                #  " WHERE q.id >= %s AND q.id <= %s")
+        query_str = " LIMIT 10 OFFSET %s"
         cursor = connection.cursor()
         try:
-            cursor.execute(table,[request.user.id,start_id,start_id+9])
+            cursor.execute(select_count+table,[request.user.id])
+            result_count = cursor.fetchone()
+            
+            cursor.execute(select+table+query_str,[request.user.id,(page_number-1)*10])
             result = self.__dictfetchall(cursor)
+            
             cursor.close()
-
             
             return {
                 "length":len(result),
+                "total_length":result_count[0],
                 "questions":result,
             }
         

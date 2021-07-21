@@ -54,7 +54,7 @@ class GeneralFilterAPI(APIView):
             for row in cursor.fetchall()
         ]
 
-    def post(self,request,format=None):
+    def helper(self,request,page_number=1,format=None):
         friends = Pair_programmer.objects.filter(user_1=request.user.id).select_related("user_2")
 
         sql_friends = ""
@@ -62,39 +62,54 @@ class GeneralFilterAPI(APIView):
             sql_friends += str(friend.user_2.id)+","
         sql_friends += str(friends[len(friends)-1].user_2.id)
 
+         
         arguments = []
-        table = (f"SELECT q.*,t.name as topic_name,qm.mark,(SELECT COUNT(*) FROM webapp_question_user_mark as qm WHERE qm.question_id = q.id AND qm.mark IN (0,1,2) AND user_id IN ({sql_friends})) AS friends" 
-                 " FROM webapp_question as q" 
-                 " JOIN webapp_topic as t ON q.topic_id = t.id"
-                 " LEFT JOIN webapp_question_user_mark as qm ON q.id=qm.question_id")
-        query_str = f" WHERE (user_id = {self.request.user.id} OR user_id IS NULL)"
+        select = (f"SELECT q.*,t.name as topic_name,qm.mark,(SELECT COUNT(*) FROM webapp_question_user_mark as qm WHERE qm.question_id = q.id AND qm.mark IN (0,1,2) AND user_id IN ({sql_friends})) AS friends")
+        select_count = (f"SELECT COUNT(*)")
+        
+        table  = (" FROM webapp_question as q" 
+                  " JOIN webapp_topic as t ON q.topic_id = t.id"
+                  " LEFT JOIN webapp_question_user_mark as qm ON q.id=qm.question_id")
+        
+        query_str = f" WHERE (user_id = {request.user.id} OR user_id IS NULL)"
         for query in request.data:
             if query!="search":
                 data = (request.data[query])
-                arguments+=data
-                query_str += f" AND {query} IN ({','.join(['%s'] * len(data))})"
-
+                if "null" in data:
+                    arguments+= [d for d in data if d!="null"]
+                    query_str += f" AND ({query} IN ({','.join(['%s'] * (len(data)-1))}) OR {query} IS NULL)"
+                else:
+                    arguments+=data
+                    query_str += f" AND {query} IN ({','.join(['%s'] * len(data))})"
             else:
                 for search in request.data[query]:
                     arguments.append(request.data[query][search])
                     query_str+=f" AND {search} LIKE '%%s%'"   
+        try:
+            cursor = connection.cursor()
+            
+            cursor.execute(select_count+table+query_str,arguments)
+            result_count = cursor.fetchone()
+            # result_count = self.__dictfetchall(cursor)
 
-        cursor = connection.cursor()
-        # try:
-        # exit()
-        cursor.execute(table+query_str,arguments)
-        print(connection.queries)
-        # exit()
-        result = self.__dictfetchall(cursor)
-        cursor.close()
-        return Response({
-            "length":len(result),
-            "questions":result
-        })
-        # except:
-        #     cursor.close()
-        #     return Response({
-        #         "msg":"error occured"
-        #     })
+            query_str+=" ORDER BY q.id LIMIT 10 OFFSET %s"
+            arguments.append((page_number-1)*10)
+            cursor.execute(select+table+query_str,arguments)
+            result = self.__dictfetchall(cursor)
+
+            cursor.close()
+            return {
+                "length":len(result),
+                "total_length":result_count[0],
+                "questions":result
+            }
+        except:
+            return{
+                "msg":"error occured"
+            }
+
+    def post(self,request,page_number=1,format=None):
+        # get friends for current user
+        return Response(self.helper(request,page_number,format))
 
         # error handling

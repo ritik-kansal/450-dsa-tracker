@@ -64,11 +64,11 @@ urlpatterns = [
     # path('api/filter/search', QuestionSearchFilterAPI.as_view()),
     # path('api/filter/search/<str:query>', QuestionSearchFilterAPI.as_view()),
     
-    path('api/filter/general', GeneralFilterAPI.as_view()),
+    path('api/filter/general/<int:page_number>', GeneralFilterAPI.as_view()),
 
     path('api/test_question_user_mark_public', QuestionUserMarkAndLogApi.as_view()),
     
-    path('api/get_question/<int:page_number>', QuestionDataApi.as_view()),
+    # path('api/get_question/<int:page_number>', QuestionDataApi.as_view()),
     
     # pages
     path('api/pages/index', IndexPageAPI.as_view()),
