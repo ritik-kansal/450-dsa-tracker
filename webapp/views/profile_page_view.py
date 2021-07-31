@@ -24,17 +24,47 @@ class ProfilePageAPI(APIView):
         mark = [0 for i in range(4)]
         questions_marked = Question_user_mark.objects.all()
         for question_mark in questions_marked:
-            print(question_mark.mark)
+            # print(question_mark.mark)
             mark[2-question_mark.mark] += 1
         # mark[3] = len(questions_marked)
         return {
             "count" : len(questions_marked),
             "marks": mark
         }
+    def topic_wise(self, request, id=None):
+        if id == None:  # for current user
+            id = self.request.user.id
+
+        # mark = [0 for i in range(4)]
+        topics = Topic.objects.all()
+        
+
+        count_for_topic = {topic.name:0 for topic in topics}
+        questions_marked = Question_user_mark.objects.all().select_related('question_id__topic_id')
+        for question_mark in questions_marked:
+            # print(question_mark.mark)
+            if question_mark.mark > 0:
+                count_for_topic[question_mark.question_id.topic_id.name] = count_for_topic.get(question_mark.question_id.topic_id.name,0) +1
+        # mark[3] = len(questions_marked)
+
+        labels = []
+        values = []
+        for topic in count_for_topic:
+            labels.append((topic[:8]+('..' if len(topic)>=8 else "")))
+            values.append(count_for_topic[topic])
+
+        return {
+            "labels": labels,
+            "values": values
+        }
 
     def get(self, request, id=None):
         questions_solved = QuestionSolvedAPI().helper(request, 1)
         question_marked = self.helper_mark(request, id)
+        topic_wise_freq = self.topic_wise(request, id)
+
+        print(topic_wise_freq)
+
         today = datetime.date.today()
         idx = (today.weekday())
 
@@ -72,6 +102,7 @@ class ProfilePageAPI(APIView):
             return Response({
                 "questions_solved": questions_solved,
                 "question_marked": question_marked,
+                "topic_wise_freq":topic_wise_freq,
                 "week_data": days
             })
 
