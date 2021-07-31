@@ -12,5 +12,6 @@ from .questions_data_view import *
 
 # 
 from .index_page_view import *
+from .profile_page_view import *
 
 from .questions_solved_view import *

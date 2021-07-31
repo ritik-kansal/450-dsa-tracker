@@ -72,6 +72,7 @@ urlpatterns = [
     
     # pages
     path('api/pages/index', IndexPageAPI.as_view()),
+    path('api/pages/profile', ProfilePageAPI.as_view()),
     
 
 

@@ -104,9 +104,9 @@ class GeneralFilterAPI(APIView):
                 "questions":result
             }
         except:
-            return{
+            return Response({
                 "msg":"error occured"
-            }
+            })
 
     def post(self,request,page_number=1,format=None):
         # get friends for current user
