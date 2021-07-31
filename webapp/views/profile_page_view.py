@@ -25,9 +25,10 @@ class ProfilePageAPI(APIView):
         questions_marked = Question_user_mark.objects.all()
         for question_mark in questions_marked:
             print(question_mark.mark)
-            mark[question_mark.mark] += 1
-        mark[3] = 450-len(questions_marked)
+            mark[2-question_mark.mark] += 1
+        # mark[3] = len(questions_marked)
         return {
+            "count" : len(questions_marked),
             "marks": mark
         }
 
