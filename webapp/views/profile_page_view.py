@@ -58,21 +58,27 @@ class ProfilePageAPI(APIView):
             "values": values
         }
 
-    def get(self, request, id=None):
+    def post(self, request, id=None):
+        if id == None:  # for current user
+            id = self.request.user.id
+        
+
         questions_solved = QuestionSolvedAPI().helper(request, 1)
         question_marked = self.helper_mark(request, id)
         topic_wise_freq = self.topic_wise(request, id)
-
-        print(topic_wise_freq)
-
-        today = datetime.date.today()
-        idx = (today.weekday())
-
-        mon = (today - datetime.timedelta(idx))
+        if request.data['day'] == None:
+            day = datetime.date.today()
+        else:
+            day = datetime.datetime.strptime(request.data['day'], '%Y-%m-%d')
+        print(request.data['day'])
+        print(day)
+        idx = (day.weekday())
+        print(idx)
+        mon = (day - datetime.timedelta(idx))
         mon_sql = mon.strftime('%Y-%m-%d')
-        sun = (today - datetime.timedelta(idx-6))
+        sun = (day - datetime.timedelta(idx-6))
         sun_sql = sun.strftime('%Y-%m-%d')
-
+        print("mon=",mon,"sun=",sun)
         query = (f"SELECT strftime('%Y-%m-%d',created_at) AS day, COUNT(*) as count FROM webapp_question_user_mark"
                  f" WHERE created_at>='{mon_sql}' AND created_at<='{sun_sql}'"
                  " GROUP BY day")
