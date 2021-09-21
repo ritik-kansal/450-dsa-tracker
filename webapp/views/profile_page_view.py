@@ -22,7 +22,7 @@ class ProfilePageAPI(APIView):
             id = self.request.user.id
 
         mark = [0 for i in range(4)]
-        questions_marked = Question_user_mark.objects.all()
+        questions_marked = Question_user_mark.objects.filter(user_id=id)
         for question_mark in questions_marked:
             # print(question_mark.mark)
             mark[2-question_mark.mark] += 1
@@ -40,7 +40,7 @@ class ProfilePageAPI(APIView):
         
 
         count_for_topic = {topic.name:0 for topic in topics}
-        questions_marked = Question_user_mark.objects.all().select_related('question_id__topic_id')
+        questions_marked = Question_user_mark.objects.filter(user_id=id).select_related('question_id__topic_id')
         for question_mark in questions_marked:
             # print(question_mark.mark)
             if question_mark.mark > 0:
@@ -63,24 +63,24 @@ class ProfilePageAPI(APIView):
             id = self.request.user.id
         
 
-        questions_solved = QuestionSolvedAPI().helper(request, 1)
+        questions_solved = QuestionSolvedAPI().helper(request, id)
         question_marked = self.helper_mark(request, id)
         topic_wise_freq = self.topic_wise(request, id)
         if request.data['day'] == None:
             day = datetime.date.today()
         else:
             day = datetime.datetime.strptime(request.data['day'], '%Y-%m-%d')
-        print(request.data['day'])
-        print(day)
+        # print(request.data['day'])
+        # print(day)
         idx = (day.weekday())
-        print(idx)
+        # print(idx)
         mon = (day - datetime.timedelta(idx))
         mon_sql = mon.strftime('%Y-%m-%d')
         sun = (day - datetime.timedelta(idx-6))
         sun_sql = sun.strftime('%Y-%m-%d')
-        print("mon=",mon,"sun=",sun)
+        # print("mon=",mon,"sun=",sun)
         query = (f"SELECT strftime('%Y-%m-%d',created_at) AS day, COUNT(*) as count FROM webapp_question_user_mark"
-                 f" WHERE created_at>='{mon_sql}' AND created_at<='{sun_sql}'"
+                 f" WHERE created_at>='{mon_sql}' AND created_at<='{sun_sql}' AND user_id = {id}"
                  " GROUP BY day")
 
         try:
@@ -103,7 +103,11 @@ class ProfilePageAPI(APIView):
             for i in range(7):
                 days[i] = week_data[days[i]]
 
-            print(days)
+            # print(days)
+
+            # for query in connection.queries:
+                # print(query)
+
             cursor.close()
             return Response({
                 "questions_solved": questions_solved,

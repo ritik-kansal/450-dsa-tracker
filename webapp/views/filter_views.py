@@ -59,10 +59,13 @@ class GeneralFilterAPI(APIView):
         # print("api called")
         friends = Pair_programmer.objects.filter(user_1=request.user.id).select_related("user_2")
 
-        sql_friends = ""
-        for friend in friends[:len(friends)-1]:
-            sql_friends += str(friend.user_2.id)+","
-        sql_friends += str(friends[len(friends)-1].user_2.id)
+        # sql_friends = ""
+        # for friend in friends[:len(friends)-1]:
+        #     sql_friends += str(friend.user_2.id)+","
+        # sql_friends += str(friends[len(friends)-1].user_2.id)
+
+        friends = [str(friend.user_2.id) for friend in friends]
+        sql_friends = ",".join(friends)
 
         # print("api called2")
          
@@ -72,7 +75,7 @@ class GeneralFilterAPI(APIView):
         
         table  = (" FROM webapp_question as q" 
                   " JOIN webapp_topic as t ON q.topic_id = t.id"
-                  " LEFT JOIN webapp_question_user_mark as qm ON q.id=qm.question_id")
+                  f" LEFT JOIN webapp_question_user_mark as qm ON q.id=qm.question_id AND user_id = {request.user.id}")
         
         # print("api called3")
         query_str = f" WHERE (user_id = {request.user.id} OR user_id IS NULL)"
@@ -101,10 +104,15 @@ class GeneralFilterAPI(APIView):
             # result_count = self.__dictfetchall(cursor)
 
             query_str+=" ORDER BY q.id LIMIT 10 OFFSET %s"
+            # print(page_number)
             arguments.append((page_number-1)*10)
+            # print(page_number,(page_number-1)*10)
             cursor.execute(select+table+query_str,arguments)
             result = self.__dictfetchall(cursor)
             # print(select+table+query_str)
+            # for query in connection.queries:
+                # print(query)
+            
             cursor.close()
             return {
                 "length":len(result),
