@@ -116,7 +116,7 @@ class ProfilePageAPI(APIView):
                 "week_data": days
             })
 
-        except:
+        except Exception as e:
             return Response({
-                "msg": "error occured"
+                "msg": str(e)
             })
