@@ -65,6 +65,8 @@ class GeneralFilterAPI(APIView):
         # sql_friends += str(friends[len(friends)-1].user_2.id)
 
         friends = [str(friend.user_2.id) for friend in friends]
+        if len(friends) == 0:
+            friends.append(-1) # to avoid error with in keyword as friend is autoincrement value so -1 is as good as empty
         sql_friends = ",".join(friends)
 
         # print("api called2")
