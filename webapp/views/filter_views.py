@@ -121,7 +121,7 @@ class GeneralFilterAPI(APIView):
             }
 
         except Exception as e:
-            return {"msg":e}
+            return {"msg":str(e)}
 
     def post(self,request,page_number=1,format=None):
         # get friends for current user
