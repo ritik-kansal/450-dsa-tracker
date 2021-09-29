@@ -79,7 +79,7 @@ class ProfilePageAPI(APIView):
         sun = (day - datetime.timedelta(idx-6))
         sun_sql = sun.strftime('%Y-%m-%d')
         # print("mon=",mon,"sun=",sun)
-        query = (f"SELECT strftime('%Y-%m-%d',created_at) AS day, COUNT(*) as count FROM webapp_question_user_mark"
+        query = (f"SELECT to_date(created_at::TEXT,'YYYY-MM-DD') AS day, COUNT(*) as count FROM webapp_question_user_mark"
                  f" WHERE created_at>='{mon_sql}' AND created_at<='{sun_sql}' AND user_id = {id}"
                  " GROUP BY day")
 
