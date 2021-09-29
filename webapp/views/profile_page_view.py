@@ -97,7 +97,7 @@ class ProfilePageAPI(APIView):
 
             for r in result:
                 week_day = datetime.datetime.strptime(
-                    r['day'], '%Y-%m-%d').strftime('%a')
+                    str(r['day']), '%Y-%m-%d').strftime('%a')
                 week_data[week_day] = r['count']
 
             for i in range(7):
