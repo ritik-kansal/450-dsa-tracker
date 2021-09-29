@@ -1,4 +1,3 @@
-from django.core.validators import _ErrorMessage
 from django.http import response
 from .req import *
 from django.db import connection
