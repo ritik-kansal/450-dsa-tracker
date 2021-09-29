@@ -1,3 +1,4 @@
+from django.core.validators import _ErrorMessage
 from django.http import response
 from .req import *
 from django.db import connection
@@ -120,8 +121,8 @@ class GeneralFilterAPI(APIView):
                 "questions":result
             }
 
-        except:
-            return {"msg":"error occured"}
+        except Exception as e:
+            return {"msg":e}
 
     def post(self,request,page_number=1,format=None):
         # get friends for current user
