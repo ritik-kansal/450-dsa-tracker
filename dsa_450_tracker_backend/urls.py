@@ -77,6 +77,4 @@ urlpatterns = [
     path('api/pages/profile', ProfilePageAPI.as_view()),
     
 
-
-    # path('api/',include(router.urls))
 ]

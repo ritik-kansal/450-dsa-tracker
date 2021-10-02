@@ -1,5 +1,11 @@
 from .req import *
 
+class IsAuthenticated(APIView):
+    def get(self,request,id = None):
+        return Response({
+            "isLoggedin": True
+        })
+
 class QuestionSolvedAPI(APIView):
     def helper(self,request,id=None):
         if id == None: #for current user
