@@ -2,7 +2,6 @@ from .req import *
 
 class TopicApi(APIView):
     serializer_class = TopicSerializer
-    permission_classes = [AllowAny]
 
     def get(self, request,id=None, format=None):
         if id == None:

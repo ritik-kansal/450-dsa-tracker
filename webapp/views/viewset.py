@@ -13,7 +13,6 @@ class TopicViewSet(viewsets.ReadOnlyModelViewSet):
 class QuestionUserMarkViewSet(viewsets.ModelViewSet):
     queryset = Question_user_mark.objects.all()
     serializer_class = QuestionUserMarkSerializer
-    # permission_classes = [AllowAny]
     def perform_create(self, serializer):
         # print(self.request.user)
         serializer.save(user_id=self.request.user)

@@ -25,3 +25,8 @@ class LoginAPI(KnoxLoginView):
         # print(result)
         return result
 
+class IsAuthenticated(APIView):
+    def get(self,request,id = None):
+        return Response({
+            "isLoggedin": True
+        })

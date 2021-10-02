@@ -23,3 +23,5 @@ class QuestionSolvedAPI(APIView):
         return Response({
             "questions_solved": self.helper(request,id)
         })
+
+

@@ -2,7 +2,6 @@ from .req import *
 
 class UserApi(APIView):
     serializer_class = UserSerializer
-    # permission_classes = [AllowAny]
 
     def get(self, request,id=None, format=None):
         if id == None:
