@@ -31,7 +31,7 @@ class GeneralFilterAPI(APIView):
         for query in request.data:
             if query!="search":
                 data = (request.data[query])
-                if len(data) == 0:
+                if len(data) == 0 or (len(data)==1 and "null" in data):
                     data.append(-1)
                 if "null" in data:
                     arguments+= [d for d in data if d!="null"]
